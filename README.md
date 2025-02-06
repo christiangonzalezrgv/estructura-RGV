@@ -105,3 +105,14 @@ Django sigue esta estructura para mantener organizado el código:
 1. Carpeta raíz (estructura_django/): Es donde puedes agregar otras aplicaciones o archivos de configuración.
 
 2. Segunda carpeta (estructura_django/ dentro de la raíz): Es donde están los archivos principales del proyecto. Si Django no hiciera esto, los archivos de configuración (settings.py, urls.py, etc.) quedarían mezclados con archivos de aplicaciones y otros archivos en la raíz, lo que sería desordenado.
+
+### ¿Qué Comandos Puedes Ejecutar con manage.py?
+
+manage.py facilita la ejecución de tareas en Django. Algunos comandos útiles:
+
+- python manage.py runserver: Inicia el servidor de desarrollo en <http://127.0.0.1:8000/>.
+- python manage.py migrate: Aplica migraciones pendientes a la base de datos.
+- python manage.py makemigrations: Crea nuevas migraciones basadas en los cambios de los modelos.
+- python manage.py createsuperuser: Crea un usuario administrador para el panel de Django.
+- python manage.py shell: Inicia una consola interactiva de Django.
+- python manage.py collectstatic: Recolecta archivos estáticos para producción.

@@ -12,7 +12,6 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 
 import os
 from pathlib import Path
-
 from dotenv import load_dotenv
 
 # Cargar variables de entorno desde .env
@@ -21,11 +20,10 @@ load_dotenv()
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
 # Seguridad: Secret Key desde variables de entorno
 SECRET_KEY = os.getenv(
     "SECRET_KEY", "django-insecure-default-key"
-)  # Cambia la clave en .env
+)
 
 # Modo Debug controlado por variables de entorno
 DEBUG = os.getenv("DEBUG", "True") == "True"
@@ -37,7 +35,6 @@ ALLOWED_HOSTS = (
     else ["127.0.0.1", "localhost"]
 )
 
-
 # Aplicaciones instaladas
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -46,6 +43,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "core",
 ]
 
 # Middleware
@@ -66,7 +64,7 @@ ROOT_URLCONF = "estructura_django.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [BASE_DIR / "templates"],
+        "DIRS": [BASE_DIR / "core/templates"],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -82,7 +80,6 @@ TEMPLATES = [
 # Configuración del WSGI
 WSGI_APPLICATION = "estructura_django.wsgi.application"
 
-
 # Configuración de Base de Datos con PostgreSQL
 DATABASES = {
     "default": {
@@ -95,7 +92,6 @@ DATABASES = {
     }
 }
 
-
 # Validadores de contraseñas
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -106,7 +102,6 @@ AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator"},
 ]
 
-
 # Internacionalización
 LANGUAGE_CODE = "es-mx"
 
@@ -115,10 +110,9 @@ TIME_ZONE = "America/Mexico_City"
 USE_I18N = True
 USE_TZ = True
 
-
 # Configuración de archivos estáticos (CSS, JS, imágenes)
 STATIC_URL = "/static/"
-STATICFILES_DIRS = [BASE_DIR / "static"]
+STATICFILES_DIRS = [BASE_DIR / "core/static"]
 STATIC_ROOT = BASE_DIR / "staticfiles"
 
 # Configuración de archivos de medios (subidos por usuarios)
