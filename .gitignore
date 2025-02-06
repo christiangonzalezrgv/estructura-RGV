@@ -1,0 +1,79 @@
+# ❌ Ignorar archivos y carpetas de Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.swp
+
+# ❌ Ignorar entornos virtuales
+venv/
+env/
+*.venv
+*.env
+
+# ❌ Ignorar archivos de configuración de entorno
+.env
+*.env.*
+
+# ❌ Ignorar archivos de base de datos SQLite (si usas PostgreSQL, no es necesario)
+db.sqlite3
+db.sqlite3-journal
+
+# ❌ Ignorar migraciones no versionadas (Opcional)
+*/migrations/*.py
+!*/migrations/__init__.py
+
+# ❌ Ignorar logs y archivos temporales
+logs/
+*.log
+*.out
+*.err
+tmp/
+*.pid
+*.lock
+*.bak
+
+# ❌ Ignorar archivos de caché y compilados
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.swp
+*.swo
+
+# ❌ Ignorar archivos de Django como estáticos y media (si se generan dinámicamente)
+staticfiles/
+media/
+
+# ❌ Ignorar archivos de compilación de Django
+*.mo
+*.pot
+
+# ❌ Ignorar archivos de Node.js (si usas frontend con npm o yarn)
+node_modules/
+npm-debug.log
+yarn-debug.log
+yarn-error.log
+
+# ❌ Ignorar archivos de Docker (si usas Docker)
+docker-compose.override.yml
+
+# ❌ Ignorar archivos de VS Code, PyCharm y otros editores
+.vscode/
+.idea/
+*.iml
+*.sublime-project
+*.sublime-workspace
+
+# ❌ Ignorar archivos de compilación de Celery (si usas Celery)
+celerybeat-schedule
+celerybeat.pid
+
+# ❌ Ignorar archivos de configuración específicos del sistema
+.DS_Store
+Thumbs.db
+
+# ❌ Ignorar dependencias de Python congeladas (si usas `pip freeze` para requirements)
+Pipfile
+Pipfile.lock
+poetry.lock
