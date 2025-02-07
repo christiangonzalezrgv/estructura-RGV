@@ -1,16 +1,18 @@
 # app/views.py
 
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView
 from django.urls import reverse_lazy
 from django.views.generic import TemplateView
 
 
-class IndexView(TemplateView):
+class IndexView(LoginRequiredMixin, TemplateView):
     """
-    Vista para la página de inicio.
+    Vista para la página de inicio protegida.
     """
 
     template_name = "index.html"
+    login_url = reverse_lazy("login")
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -18,12 +20,13 @@ class IndexView(TemplateView):
         return context
 
 
-class DocumentacionView(TemplateView):
+class DocumentacionView(LoginRequiredMixin, TemplateView):
     """
-    Vista para la página de documentación.
+    Vista para la página de documentación protegida.
     """
 
     template_name = "documentacion.html"
+    login_url = reverse_lazy("login")
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -31,12 +34,13 @@ class DocumentacionView(TemplateView):
         return context
 
 
-class AuditoriaView(TemplateView):
+class AuditoriaView(LoginRequiredMixin, TemplateView):
     """
-    Vista para la página de auditoría.
+    Vista para la página de auditoría protegida.
     """
 
     template_name = "auditoria.html"
+    login_url = reverse_lazy("login")
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -55,7 +59,6 @@ class UserLoginView(LoginView):
     success_url = reverse_lazy("index")
 
     def form_valid(self, form):
-        # Se puede agregar lógica adicional aquí si se requiere.
         return super().form_valid(form)
 
 
