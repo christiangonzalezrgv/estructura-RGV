@@ -11,7 +11,9 @@ load_dotenv()
 # Definir el prefijo de la aplicación a partir de APP_NAME (en minúsculas)
 APP_PREFIX = os.getenv("APP_NAME", "default_app").lower()
 
-# MONKEY PATCH para que todos los modelos (incluidos los de Django) usen el prefijo APP_PREFIX
+# -----------------------------
+# MONKEY PATCH: Sobrescribir la propiedad db_table en Options
+# para que todos los modelos (incluidos los de Django) usen el prefijo APP_PREFIX.
 from django.db.models.options import Options
 
 
@@ -32,7 +34,7 @@ def set_db_table(self, value):
 
 
 Options.db_table = property(new_db_table, set_db_table)
-
+# -----------------------------
 
 # Directorio base del proyecto
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -41,7 +43,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv("SECRET_KEY", "django-insecure-default-key")
 DEBUG = os.getenv("DEBUG", "True") == "True"
 
-# Variable para el prefijo de la aplicación
+# Variable para el prefijo de la aplicación (se usará también para el label de la app)
 APP_NAME = os.getenv("APP_NAME", "default_app").lower()
 
 # Hosts permitidos
@@ -132,5 +134,9 @@ MEDIA_ROOT = BASE_DIR / "media"
 # Configuración del campo por defecto en modelos
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-LOGIN_REDIRECT_URL = "/" 
+# Rutas de redirección después del login/logout
+LOGIN_REDIRECT_URL = "/"
 LOGOUT_REDIRECT_URL = "/authentication/login/"
+
+# Configurar el modelo de usuario personalizado
+AUTH_USER_MODEL = f"{APP_NAME}.Usuario"

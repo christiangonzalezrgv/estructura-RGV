@@ -1,14 +1,14 @@
 # app/views.py
 
+from django.contrib.auth.views import LoginView
+from django.urls import reverse_lazy
 from django.views.generic import TemplateView
 
 
-from django.contrib.auth.views import LoginView
-from django.urls import reverse_lazy
-
-
 class IndexView(TemplateView):
-    """Página de inicio"""
+    """
+    Vista para la página de inicio.
+    """
 
     template_name = "index.html"
 
@@ -19,7 +19,9 @@ class IndexView(TemplateView):
 
 
 class DocumentacionView(TemplateView):
-    """Página de documentación"""
+    """
+    Vista para la página de documentación.
+    """
 
     template_name = "documentacion.html"
 
@@ -30,7 +32,9 @@ class DocumentacionView(TemplateView):
 
 
 class AuditoriaView(TemplateView):
-    """Página de auditoría"""
+    """
+    Vista para la página de auditoría.
+    """
 
     template_name = "auditoria.html"
 
@@ -43,11 +47,7 @@ class AuditoriaView(TemplateView):
 class UserLoginView(LoginView):
     """
     Vista para el login de usuarios.
-    Se utiliza la plantilla personalizada 'auth/login.html'.
-
-    Nota:
-    - redirect_authenticated_user: redirecciona automáticamente a un usuario ya autenticado.
-    - success_url: URL a la que se redirecciona si el login es exitoso.
+    Se utiliza la plantilla 'auth/login.html'.
     """
 
     template_name = "auth/login.html"
@@ -55,9 +55,19 @@ class UserLoginView(LoginView):
     success_url = reverse_lazy("index")
 
     def form_valid(self, form):
-        """
-        Si el formulario de login es válido, se procede a autenticar y redirigir al usuario.
-        Aquí se puede agregar lógica adicional si es necesario.
-        """
-        
+        # Se puede agregar lógica adicional aquí si se requiere.
         return super().form_valid(form)
+
+
+class ForgotPasswordView(TemplateView):
+    """
+    Vista para la página de "Olvidé mi contraseña".
+    Por el momento, solo renderiza el template sin lógica adicional.
+    """
+
+    template_name = "auth/forgotpassword.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["activeMenu"] = "forgotpassword"
+        return context

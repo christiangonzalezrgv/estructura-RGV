@@ -1,21 +1,66 @@
 # app/models.py
 
-from django.db import models
 from django.conf import settings
+from django.contrib.auth.models import (
+    AbstractBaseUser,
+    BaseUserManager,
+    PermissionsMixin,
+)
+from django.db import models
+
 from .models_base import BaseModel
 
 
-class Usuario(BaseModel):
+class UsuarioManager(BaseUserManager):
     """
-    Modelo de Usuario. La tabla se generará automáticamente como:
+    Gestor de usuarios personalizado para usar el correo como identificador único.
     """
 
-    nombre = models.CharField(max_length=100)
-    correo = models.EmailField(unique=True)
-    activo = models.BooleanField(default=True)
+    def create_user(self, correo, nombre, password=None, **extra_fields):
+        """
+        Crea y guarda un usuario con el correo, nombre y contraseña proporcionados.
+        """
+        if not correo:
+            raise ValueError("El usuario debe tener un correo electrónico")
+        correo = self.normalize_email(correo)
+        user = self.model(correo=correo, nombre=nombre, **extra_fields)
+        user.set_password(password)
+        user.save(using=self._db)
+        return user
+
+    def create_superuser(self, correo, nombre, password=None, **extra_fields):
+        """
+        Crea y guarda un superusuario con el correo, nombre y contraseña proporcionados.
+        """
+        extra_fields.setdefault("is_staff", True)
+        extra_fields.setdefault("is_superuser", True)
+        if extra_fields.get("is_staff") is not True:
+            raise ValueError("El superusuario debe tener is_staff=True")
+        if extra_fields.get("is_superuser") is not True:
+            raise ValueError("El superusuario debe tener is_superuser=True")
+        return self.create_user(correo, nombre, password, **extra_fields)
+
+
+class Usuario(AbstractBaseUser, PermissionsMixin, BaseModel):
+    """
+    Modelo de Usuario personalizado que usa el correo electrónico como identificador.
+    Se define explícitamente el campo 'password' para asegurar que se cree en la base de datos.
+    """
+
+    correo = models.EmailField(unique=True, verbose_name="Correo Electrónico")
+    nombre = models.CharField(max_length=100, verbose_name="Nombre Completo")
+    password = models.CharField(max_length=128, verbose_name="Contraseña")
+    is_active = models.BooleanField(default=True, verbose_name="Activo")
+    is_staff = models.BooleanField(default=False, verbose_name="Es Staff")
+
+    objects = UsuarioManager()
+
+    # Se usará el correo como campo para la autenticación.
+    USERNAME_FIELD = "correo"
+    REQUIRED_FIELDS = ["nombre"]
 
     def __str__(self):
-        return self.nombre
+        return self.correo
 
     class Meta:
         verbose_name = "Usuario"

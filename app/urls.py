@@ -3,15 +3,19 @@
 from django.contrib.auth.views import LogoutView
 from django.urls import path
 
-from .views import AuditoriaView, DocumentacionView, IndexView, UserLoginView
+from .views import (
+    AuditoriaView,
+    DocumentacionView,
+    ForgotPasswordView,
+    IndexView,
+    UserLoginView,
+)
 
 urlpatterns = [
     path("", IndexView.as_view(), name="index"),
     path("documentacion/", DocumentacionView.as_view(), name="documentacion"),
     path("auditoria/", AuditoriaView.as_view(), name="auditoria"),
-    # Ruta para el login
     path("auth/login/", UserLoginView.as_view(), name="login"),
-    # Ruta para el logout
-    path("auth/logout/", LogoutView.as_view(), name="logout"),
-    # implementar forgot password
+    path("auth/logout/", LogoutView.as_view(next_page="login"), name="logout"),
+    path("auth/forgotpassword/", ForgotPasswordView.as_view(), name="forgotpassword"),
 ]
