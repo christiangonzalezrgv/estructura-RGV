@@ -19,10 +19,6 @@ env/
 db.sqlite3
 db.sqlite3-journal
 
-# ❌ Ignorar migraciones no versionadas (Opcional)
-*/migrations/*.py
-!*/migrations/__init__.py
-
 # ❌ Ignorar logs y archivos temporales
 logs/
 *.log

@@ -1,14 +1,13 @@
 # app/models.py
 
 from django.db import models
-
+from django.conf import settings
 from .models_base import BaseModel
 
 
 class Usuario(BaseModel):
     """
     Modelo de Usuario. La tabla se generará automáticamente como:
-    "estructura_rgv_usuario" (suponiendo que APP_NAME=estructura_rgv)
     """
 
     nombre = models.CharField(max_length=100)
@@ -21,12 +20,12 @@ class Usuario(BaseModel):
     class Meta:
         verbose_name = "Usuario"
         verbose_name_plural = "Usuarios"
+        app_label = settings.APP_NAME
 
 
 class LogAuditoria(BaseModel):
     """
     Modelo para registrar logs de auditoría.
-    La tabla se nombrará "<APP_NAME>_logauditoria".
     """
 
     accion = models.CharField(max_length=200)
@@ -39,3 +38,4 @@ class LogAuditoria(BaseModel):
     class Meta:
         verbose_name = "Log de Auditoría"
         verbose_name_plural = "Logs de Auditoría"
+        app_label = settings.APP_NAME

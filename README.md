@@ -70,6 +70,12 @@ pip install -r requirements.txt
 pip freeze > requirements.txt
 ```
 
+### Crear super usuario django
+
+```bash
+python manage.py createsuperuser
+```
+
 ### Variables de entorno
 
 Crear un archivo `.env` en la raíz del proyecto con las siguientes variables:
@@ -152,3 +158,9 @@ manage.py facilita la ejecución de tareas en Django. Algunos comandos útiles:
 - python manage.py createsuperuser: Crea un usuario administrador para el panel de Django.
 - python manage.py shell: Inicia una consola interactiva de Django.
 - python manage.py collectstatic: Recolecta archivos estáticos para producción.
+
+
+psql -U postgres -c "DROP DATABASE IF EXISTS django_db;"
+
+
+psql -U postgres -c "CREATE DATABASE django_db OWNER postgres;"
