@@ -2,7 +2,6 @@
 
 import os
 from pathlib import Path
-
 from dotenv import load_dotenv
 
 # Cargar variables de entorno desde .env
@@ -15,13 +14,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv("SECRET_KEY", "django-insecure-default-key")
 DEBUG = os.getenv("DEBUG", "True") == "True"
 
+# Variable para el prefijo de la aplicación
+APP_NAME = os.getenv("APP_NAME", "default_app").lower()
 
 # Hosts permitidos
-ALLOWED_HOSTS = (
-    os.getenv("ALLOWED_HOSTS", "").split(",")
-    if os.getenv("ALLOWED_HOSTS")
-    else ["127.0.0.1", "localhost"]
-)
+ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "127.0.0.1,localhost").split(",")
 
 # Aplicaciones instaladas
 INSTALLED_APPS = [
@@ -31,7 +28,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    settings.APP_NAME,
+    "app",
 ]
 
 # Middleware
@@ -109,6 +106,3 @@ MEDIA_ROOT = BASE_DIR / "media"
 
 # Configuración del campo por defecto en modelos
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
-
-# Variable para el prefijo de la aplicación
-APP_NAME = os.getenv("APP_NAME", "default_app").lower()
