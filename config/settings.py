@@ -2,10 +2,37 @@
 
 import os
 from pathlib import Path
+
 from dotenv import load_dotenv
 
 # Cargar variables de entorno desde .env
 load_dotenv()
+
+# Definir el prefijo de la aplicación a partir de APP_NAME (en minúsculas)
+APP_PREFIX = os.getenv("APP_NAME", "default_app").lower()
+
+# MONKEY PATCH para que todos los modelos (incluidos los de Django) usen el prefijo APP_PREFIX
+from django.db.models.options import Options
+
+
+def new_db_table(self):
+    """
+    Devuelve el nombre de la tabla con el prefijo APP_PREFIX.
+    Si self._db_table ya fue asignado, se usa ese valor; en caso contrario,
+    se genera el nombre por defecto (app_label + "_" + model_name) y se le antepone el prefijo.
+    """
+    table = self._db_table if self._db_table else f"{self.app_label}_{self.model_name}"
+    if not table.startswith(f"{APP_PREFIX}_"):
+        table = f"{APP_PREFIX}_{table}"
+    return table
+
+
+def set_db_table(self, value):
+    self._db_table = value
+
+
+Options.db_table = property(new_db_table, set_db_table)
+
 
 # Directorio base del proyecto
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -89,9 +116,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 # Internacionalización
 LANGUAGE_CODE = "es-mx"
-
 TIME_ZONE = "America/Mexico_City"
-
 USE_I18N = True
 USE_TZ = True
 
@@ -106,14 +131,3 @@ MEDIA_ROOT = BASE_DIR / "media"
 
 # Configuración del campo por defecto en modelos
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
-
-'''
-Agregar esto para que solo se realicen las migraciones de la app actual
-
-MIGRATION_MODULES = {
-    "auth": None,
-    "contenttypes": None,
-    "sessions": None,
-    "admin": None,
-}
-'''

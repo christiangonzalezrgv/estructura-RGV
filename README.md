@@ -83,14 +83,17 @@ Crear un archivo `.env` en la raíz del proyecto con las siguientes variables:
 ```bash
 # Django settings
 DEBUG=True
-SECRET_KEY=supersecreto123
+SECRET_KEY=secret_key
 
 # Database connection
-DATABASE_NAME=mydatabase
-DATABASE_USER=myuser
-DATABASE_PASSWORD=mypassword
+DATABASE_NAME=db_name
+DATABASE_USER=postgres
+DATABASE_PASSWORD=db_password
 DATABASE_HOST=localhost
 DATABASE_PORT=5432
+
+# App configuration
+APP_NAME=nombre_app
 ```
 
 ### Ejecutar
@@ -106,46 +109,9 @@ python manage.py makemigrations
 python manage.py migrate
 ```
 
-## Sincronizar migraciones en DB
+## Sincronizar migraciones globales entre apps
 
-1. Aplicar migraciones globales en "modo fake"
-
-```bash
-python manage.py migrate --fake
-```
-
-Esto evitará que Django intente recrear las tablas globales.
-
-2. Generar migraciones solo para los modelos específicos de cada repositorio.
-
-```bash
-python manage.py makemigrations app
-python manage.py migrate
-```
-
-### Configurar registro de control de migraciones
-
-1. Crear tabla en PostgreSQL para registrar qué repositorio ha aplicado migraciones:
-
-```sql
-CREATE TABLE django_migrations_control (
-    id SERIAL PRIMARY KEY,
-    repository_name TEXT NOT NULL,
-    migration_timestamp TIMESTAMP DEFAULT NOW()
-);
-```
-
-2. Cuando estructura-rgv aplique migraciones, agregar un registro:
-
-```sql
-INSERT INTO django_migrations_control (repository_name) VALUES ('estructura-rgv');
-```
-
-3. Verificar el estado de las migraciones en cada repositorio, ejecutar:
-
-```sql
-SELECT * FROM django_migrations_control;
-```
+Pendiente
 
 ## Información adicional
 
@@ -199,6 +165,8 @@ manage.py facilita la ejecución de tareas en Django. Algunos comandos útiles:
 - python manage.py createsuperuser: Crea un usuario administrador para el panel de Django.
 - python manage.py shell: Inicia una consola interactiva de Django.
 - python manage.py collectstatic: Recolecta archivos estáticos para producción.
+
+---
 
 psql -U postgres -c "DROP DATABASE IF EXISTS django_db;"
 
