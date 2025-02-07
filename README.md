@@ -106,6 +106,47 @@ python manage.py makemigrations
 python manage.py migrate
 ```
 
+## Sincronizar migraciones en DB
+
+1. Aplicar migraciones globales en "modo fake"
+
+```bash
+python manage.py migrate --fake
+```
+
+Esto evitará que Django intente recrear las tablas globales.
+
+2. Generar migraciones solo para los modelos específicos de cada repositorio.
+
+```bash
+python manage.py makemigrations app
+python manage.py migrate
+```
+
+### Configurar registro de control de migraciones
+
+1. Crear tabla en PostgreSQL para registrar qué repositorio ha aplicado migraciones:
+
+```sql
+CREATE TABLE django_migrations_control (
+    id SERIAL PRIMARY KEY,
+    repository_name TEXT NOT NULL,
+    migration_timestamp TIMESTAMP DEFAULT NOW()
+);
+```
+
+2. Cuando estructura-rgv aplique migraciones, agregar un registro:
+
+```sql
+INSERT INTO django_migrations_control (repository_name) VALUES ('estructura-rgv');
+```
+
+3. Verificar el estado de las migraciones en cada repositorio, ejecutar:
+
+```sql
+SELECT * FROM django_migrations_control;
+```
+
 ## Información adicional
 
 ### Archivo __init__.py
@@ -159,8 +200,6 @@ manage.py facilita la ejecución de tareas en Django. Algunos comandos útiles:
 - python manage.py shell: Inicia una consola interactiva de Django.
 - python manage.py collectstatic: Recolecta archivos estáticos para producción.
 
-
 psql -U postgres -c "DROP DATABASE IF EXISTS django_db;"
-
 
 psql -U postgres -c "CREATE DATABASE django_db OWNER postgres;"

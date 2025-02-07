@@ -106,3 +106,14 @@ MEDIA_ROOT = BASE_DIR / "media"
 
 # Configuración del campo por defecto en modelos
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+'''
+Agregar esto para que solo se realicen las migraciones de la app actual
+
+MIGRATION_MODULES = {
+    "auth": None,
+    "contenttypes": None,
+    "sessions": None,
+    "admin": None,
+}
+'''
