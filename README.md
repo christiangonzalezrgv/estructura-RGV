@@ -102,9 +102,9 @@ Las aplicaciones son módulos independientes dentro del proyecto, diseñados par
 
 Django sigue esta estructura para mantener organizado el código:
 
-1. Carpeta raíz (estructura_django/): Es donde puedes agregar otras aplicaciones o archivos de configuración.
+1. Carpeta raíz (config/): Es donde puedes agregar otras aplicaciones o archivos de configuración.
 
-2. Segunda carpeta (estructura_django/ dentro de la raíz): Es donde están los archivos principales del proyecto. Si Django no hiciera esto, los archivos de configuración (settings.py, urls.py, etc.) quedarían mezclados con archivos de aplicaciones y otros archivos en la raíz, lo que sería desordenado.
+2. Segunda carpeta (config/ dentro de la raíz): Es donde están los archivos principales del proyecto. Si Django no hiciera esto, los archivos de configuración (settings.py, urls.py, etc.) quedarían mezclados con archivos de aplicaciones y otros archivos en la raíz, lo que sería desordenado.
 
 ### ¿Qué Comandos Puedes Ejecutar con manage.py?
 
