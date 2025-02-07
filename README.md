@@ -1,6 +1,10 @@
-# Estructura Django
+# Estructura RGV
 
-Versiones (feberero 2025):
+Estructura base para proyectos Django.
+
+Última actualización: febrero 2025
+
+Versiones utilizadas:
 
 - Python 3.13
 - Django 5.1.6
@@ -71,8 +75,11 @@ pip freeze > requirements.txt
 Crear un archivo `.env` en la raíz del proyecto con las siguientes variables:
 
 ```bash
+# Django settings
 DEBUG=True
 SECRET_KEY=supersecreto123
+
+# Database connection
 DATABASE_NAME=mydatabase
 DATABASE_USER=myuser
 DATABASE_PASSWORD=mypassword
