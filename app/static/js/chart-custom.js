@@ -266,7 +266,7 @@ var userchart = {
         height: 280,
         type: "bar",
         events: {
-            click: function (chart, w, e) {},
+            click: function (chart, w, e) { },
         },
         toolbar: {
             show: false,

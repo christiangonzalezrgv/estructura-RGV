@@ -1,16 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
 
-{% include  "./partials/head.html" %}
+{% include "./partials/head.html" %}
 
-<body x-data="main" class="font-inter text-base antialiased font-medium relative vertical" :class="[ $store.app.sidebar ? 'toggle-sidebar' : '', $store.app.fullscreen ? 'full' : '',$store.app.mode]">
+<body x-data="main" class="font-inter text-base antialiased font-medium relative vertical"
+    :class="[ $store.app.sidebar ? 'toggle-sidebar' : '', $store.app.fullscreen ? 'full' : '',$store.app.mode]">
 
     <!-- Start Layout -->
     <div class="min-h-screen bg-white dark:bg-dark text-dark dark:text-white">
         <!-- Start Content -->
         {% block content %}
 
-        {% endblock %} 
+        {% endblock %}
         <!-- End Content -->
     </div>
     <!-- End Layout -->

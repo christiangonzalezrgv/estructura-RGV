@@ -5,6 +5,35 @@ Versiones (feberero 2025):
 - Python 3.13
 - Django 5.1.6
 
+## Estructura
+
+```bash
+.
+└── estructura-django/
+    ├── app/
+    │   ├── migrations/
+    │   ├── static/
+    │   ├── templates/
+    │   ├── __init__.py
+    │   ├── admin.py
+    │   ├── apps.py
+    │   ├── models.py
+    │   ├── tests.py
+    │   ├── urls.py
+    │   └── views.py
+    ├── config/
+    │   ├── __init__.py
+    │   ├── asgi.py
+    │   ├── settings.py
+    │   ├── urls.py
+    │   └── wsgi.py
+    ├── venv/
+    ├── .env
+    ├── .gitignore
+    ├── manage.py
+    └── README.md
+```
+
 ## Setup inicial
 
 ### Entorno virtual

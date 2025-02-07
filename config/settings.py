@@ -21,9 +21,7 @@ load_dotenv()
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Seguridad: Secret Key desde variables de entorno
-SECRET_KEY = os.getenv(
-    "SECRET_KEY", "django-insecure-default-key"
-)
+SECRET_KEY = os.getenv("SECRET_KEY", "django-insecure-default-key")
 
 # Modo Debug controlado por variables de entorno
 DEBUG = os.getenv("DEBUG", "True") == "True"
