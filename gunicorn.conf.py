@@ -10,7 +10,7 @@ graceful_timeout = 120
 keepalive = 5
 
 def pre_request(worker, req):
-    """Evita errores cuando `CONTENT_LENGTH` no está definido"""
-    content_length = req.headers.get("CONTENT_LENGTH")
-    if content_length is None:
-        req.headers.append(("CONTENT_LENGTH", "0"))  # Agregar como tupla en lugar de diccionario
+    """Corrige el acceso a `req.headers` que es una lista de tuplas"""
+    headers = dict(req.headers)  # Convierte la lista en un diccionario temporal
+    if "CONTENT_LENGTH" not in headers:
+        req.headers.append(("CONTENT_LENGTH", "0"))  # Agregar como tupla
