@@ -1,21 +1,42 @@
 from django import forms
-from .models import Usuario
+from .models import *
 from django.contrib.auth.models import User, Group
 
+class EmailForm(forms.ModelForm):
+    correo = forms.EmailField(
+        label="Correo electrónico*",
+        max_length=200,
+        widget=forms.EmailInput(attrs={'class': 'form-control'})
+    )
+    class Meta:
+        model = Usuario
+        fields = ['correo']
+
+class LoginForm(forms.ModelForm):
+    correo = forms.EmailField(
+        label="Correo electrónico*",
+        max_length=50,
+        widget=forms.EmailInput(attrs={'class': 'form-control'})
+    )
+
+    password = forms.CharField(
+        label="Contraseña",
+        max_length=50,
+        widget=forms.PasswordInput(attrs={'class': 'form-control'})
+    )
+
+    class Meta:
+        model = Usuario
+        fields = ['correo', 'password']
+
 class UsuariosForm(forms.ModelForm):
-    first_name = forms.CharField(
+    nombre = forms.CharField(
         label="Nombre*",
         max_length=50,
         required=True,
         widget=forms.TextInput(attrs={'class': 'form-control'})
     )
-    username = forms.CharField(
-        label="Nombre de usuario*",
-        max_length=50,
-        required=True,
-        widget=forms.TextInput(attrs={'class': 'form-control'})
-    )
-    email = forms.EmailField(
+    correo = forms.EmailField(
         label="Correo electrónico*",
         max_length=50,
         required=True,
@@ -26,14 +47,7 @@ class UsuariosForm(forms.ModelForm):
         required=False,
         widget=forms.CheckboxInput(attrs={'class': 'form-control'})
     )
-    groups = forms.ChoiceField(
-        label="Grupo",
-        choices=[('prueba_admin', 'prueba_admin'), ('prueba_user', 'prueba_user')],
-        required=False,
-        widget=forms.Select(attrs={'class': 'form-control'})
-    )
 
     class Meta:
         model = Usuario
-        fields = ['first_name', 'username','email', 'is_active', 'groups']
-    
+        fields = ['nombre','correo', 'is_active']
