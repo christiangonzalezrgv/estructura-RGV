@@ -1,1 +1,2 @@
-web: gunicorn -w 4 -b 0.0.0.0:8000 app:manage.py
+web: gunicorn -w 4 -b 0.0.0.0:8000 config.wsgi:application
+
