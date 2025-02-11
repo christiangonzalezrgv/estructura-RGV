@@ -10,6 +10,7 @@ graceful_timeout = 120
 keepalive = 5
 
 def pre_request(worker, req):
-    """Evita que Gunicorn falle si `CONTENT_LENGTH` no está presente"""
-    if "CONTENT_LENGTH" not in req.headers:
-        req.headers["CONTENT_LENGTH"] = "0"
+    """Evita errores cuando `CONTENT_LENGTH` no está definido"""
+    content_length = req.headers.get("CONTENT_LENGTH")
+    if content_length is None:
+        req.headers.append(("CONTENT_LENGTH", "0"))  # Agregar como tupla en lugar de diccionario
