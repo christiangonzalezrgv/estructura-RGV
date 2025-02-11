@@ -49,7 +49,7 @@ DEBUG = os.getenv("DEBUG", "True") == "True"
 APP_NAME = os.getenv("APP_NAME", "default_app").lower()
 
 # Hosts permitidos
-ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "").split(",") if os.getenv("ALLOWED_HOSTS") else []
+ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "estructura-django-dev.us-east-2.elasticbeanstalk.com").split(",")
 
 # Aplicaciones instaladas
 INSTALLED_APPS = [
