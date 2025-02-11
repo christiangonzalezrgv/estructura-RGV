@@ -1,0 +1,41 @@
+<!-- templates/dynamic_form.html -->
+
+{% extends 'partials/layout1.html' %}
+
+{% block content %}
+<div class="flex flex-col gap-5 min-h-[calc(100vh-188px)] sm:min-h-[calc(100vh-204px)]">
+    <div class="grid grid-cols-1 gap-5">
+        <div class="bg-white dark:bg-dark dark:border-gray/20 border-2 border-lightgray/10 p-5 rounded-lg">
+            <!-- Título del formulario -->
+            <h2 class="text-base font-semibold mb-4">
+                {{ action }} Registro en {{ table_name }}
+            </h2>
+            <!-- Formulario -->
+            <form method="POST" class="space-y-4">
+                {% csrf_token %}
+                {% for field in form %}
+                <div class="space-y-2">
+                    <label for="{{ field.id_for_label }}" class="text-sm text-lightgray capitalize">{{ field.label }}</label>
+                    {{ field }}
+                    {% if field.errors %}
+                    <div class="text-red-500 text-sm">
+                        {{ field.errors }}
+                    </div>
+                    {% endif %}
+                </div>
+                {% endfor %}
+                <!-- Botones de acción -->
+                <div class="flex items-center gap-4">
+                    <button type="submit"
+                        class="btn border text-primary border-transparent rounded-md transition-all duration-300 hover:text-white hover:bg-primary bg-primary/10">
+                        Guardar
+                    </button>
+                    <a href="{% url 'list_records' table_name %}" class="text-gray-600 hover:underline">
+                        Cancelar
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock content %}

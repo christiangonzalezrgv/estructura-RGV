@@ -4,9 +4,8 @@ import os
 from pathlib import Path
 
 from dotenv import load_dotenv
+from django.apps import apps
 
-# Cargar variables de entorno desde .env
-load_dotenv()
 
 # Definir el prefijo de la aplicación a partir de APP_NAME (en minúsculas)
 APP_PREFIX = os.getenv("APP_NAME", "default_app").lower()
@@ -32,12 +31,15 @@ def new_db_table(self):
 def set_db_table(self, value):
     self._db_table = value
 
-
 Options.db_table = property(new_db_table, set_db_table)
 # -----------------------------
 
 # Directorio base del proyecto
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+# Cargar variables de entorno desde .env
+env_path = load_dotenv(os.path.join(BASE_DIR, '.env'))
+load_dotenv(env_path)
 
 # Configuración de la aplicación
 SECRET_KEY = os.getenv("SECRET_KEY", "django-insecure-default-key")
@@ -58,6 +60,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "app",
+    "auditlog"
 ]
 
 # Middleware
@@ -69,7 +72,11 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "auditlog.middleware.AuditlogMiddleware",
 ]
+
+# Configuración para Django Auditlog: esto incluye todos los modelos para la auditoria.
+AUDITLOG_INCLUDE_ALL_MODELS = True
 
 # Configuración de URLs raíz
 ROOT_URLCONF = "config.urls"
@@ -97,12 +104,12 @@ WSGI_APPLICATION = "config.wsgi.application"
 # Configuración de Base de Datos con PostgreSQL
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": os.getenv("DATABASE_NAME", "mydatabase"),
-        "USER": os.getenv("DATABASE_USER", "myuser"),
-        "PASSWORD": os.getenv("DATABASE_PASSWORD", "mypassword"),
-        "HOST": os.getenv("DATABASE_HOST", "localhost"),
-        "PORT": os.getenv("DATABASE_PORT", "5432"),
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': "estructura_django_db",
+        'USER': "postgres",
+        'PASSWORD': "MyGPUeZVeeaTrWUE8xrZ",
+        'HOST': "estructura-django-db.cbgwwkuui0z9.us-east-2.rds.amazonaws.com",
+        'PORT': 5432
     }
 }
 
@@ -140,3 +147,4 @@ LOGOUT_REDIRECT_URL = "/authentication/login/"
 
 # Configurar el modelo de usuario personalizado
 AUTH_USER_MODEL = f"{APP_NAME}.Usuario"
+
