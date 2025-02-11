@@ -16,8 +16,7 @@
             <div class="overflow-auto space-y-4" x-data="tabla"
                 x-init="initData(); $watch('searchInput', value => { search(value) })">
                 <div class="flex justify-between items-center gap-3">
-                    <h2 class="text-base font-semibold mb-4">{{ table_name }}</h2>
-                    <h2 class="text-base font-semibold mb-4">{{ ALL_MODELS }}</h2>
+                    <h2 class="text-base font-semibold mb-4">{{ table_name|cut:"nombre_app_"|title }}</h2>
                     <div class="flex gap-2">
                         <!-- Botón para agregar nuevo registro -->
                         <button onclick="window.location.href='{% url 'create_record' table_name %}'" type="submit"
