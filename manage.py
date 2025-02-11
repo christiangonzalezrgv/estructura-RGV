@@ -3,7 +3,8 @@
 
 import os
 import sys
-
+from django.apps import apps
+from django.db import models
 
 def main():
     """Run administrative tasks."""

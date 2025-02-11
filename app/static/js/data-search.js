@@ -1,3 +1,5 @@
+// static/js/data-search.js
+
 /**
  * Fuse.js v6.6.2 - Lightweight fuzzy-search (http://fusejs.io)
  *
