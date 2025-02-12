@@ -132,8 +132,8 @@ USE_TZ = True
 
 # Configuración de archivos estáticos (CSS, JS, imágenes)
 STATIC_URL = "/static/"
-STATICFILES_DIRS = [BASE_DIR / "app/static"]
-STATIC_ROOT = BASE_DIR / "staticfiles"
+#STATICFILES_DIRS = [BASE_DIR / "app/static"]
+#STATIC_ROOT = BASE_DIR / "staticfiles"
 
 # Configuración de archivos de medios (subidos por usuarios)
 MEDIA_URL = "/media/"
