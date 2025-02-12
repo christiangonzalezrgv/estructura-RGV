@@ -38,7 +38,6 @@ __pycache__/
 *.swo
 
 # ❌ Ignorar archivos de Django como estáticos y media (si se generan dinámicamente)
-staticfiles/
 media/
 
 # ❌ Ignorar archivos de compilación de Django
