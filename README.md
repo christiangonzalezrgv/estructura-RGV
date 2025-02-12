@@ -171,3 +171,5 @@ manage.py facilita la ejecución de tareas en Django. Algunos comandos útiles:
 psql -U postgres -c "DROP DATABASE IF EXISTS django_db;"
 
 psql -U postgres -c "CREATE DATABASE django_db OWNER postgres;"
+
+
