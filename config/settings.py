@@ -131,9 +131,9 @@ USE_I18N = True
 USE_TZ = True
 
 # Configuración de archivos estáticos (CSS, JS, imágenes)
-STATIC_URL = "/static/"
+STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / "app/static"]
-STATIC_ROOT = BASE_DIR / "staticfiles"
+STATIC_ROOT = 'static'
 
 # Configuración de archivos de medios (subidos por usuarios)
 MEDIA_URL = "/media/"
