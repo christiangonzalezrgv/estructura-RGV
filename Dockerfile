@@ -15,6 +15,9 @@ RUN pip install --upgrade pip && pip install -r requirements.txt
 # Copia el resto del código de la aplicación
 COPY . /app/
 
+# Ejecuta collectstatic para recopilar archivos estáticos en STATIC_ROOT
+RUN python manage.py collectstatic --noinput
+
 # Da permisos de ejecución al entrypoint.sh
 RUN chmod +x entrypoint.sh
 

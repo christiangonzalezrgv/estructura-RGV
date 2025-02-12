@@ -6,7 +6,6 @@ from pathlib import Path
 from dotenv import load_dotenv
 from django.apps import apps
 
-
 # Definir el prefijo de la aplicación a partir de APP_NAME (en minúsculas)
 APP_PREFIX = os.getenv("APP_NAME", "default_app").lower()
 
@@ -31,6 +30,7 @@ def new_db_table(self):
 def set_db_table(self, value):
     self._db_table = value
 
+
 Options.db_table = property(new_db_table, set_db_table)
 # -----------------------------
 
@@ -38,8 +38,7 @@ Options.db_table = property(new_db_table, set_db_table)
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Cargar variables de entorno desde .env
-env_path = load_dotenv(os.path.join(BASE_DIR, '.env'))
-load_dotenv(env_path)
+load_dotenv(os.path.join(BASE_DIR, ".env"))
 
 # Configuración de la aplicación
 SECRET_KEY = os.getenv("SECRET_KEY", "django-insecure-default-key")
@@ -49,7 +48,10 @@ DEBUG = os.getenv("DEBUG", "True") == "True"
 APP_NAME = os.getenv("APP_NAME", "default_app").lower()
 
 # Hosts permitidos
-ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "127.0.0.1,localhost,django-prueba.eba-uryewyx3.us-east-2.elasticbeanstalk.com,172.31.40.205").split(",")
+ALLOWED_HOSTS = os.getenv(
+    "ALLOWED_HOSTS",
+    "127.0.0.1,localhost,django-prueba.eba-uryewyx3.us-east-2.elasticbeanstalk.com,172.31.40.205",
+).split(",")
 
 # Aplicaciones instaladas
 INSTALLED_APPS = [
@@ -60,12 +62,13 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "app",
-    "auditlog"
+    "auditlog",
 ]
 
 # Middleware
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -75,7 +78,7 @@ MIDDLEWARE = [
     "auditlog.middleware.AuditlogMiddleware",
 ]
 
-# Configuración para Django Auditlog: esto incluye todos los modelos para la auditoria.
+# Configuración para Django Auditlog: incluye todos los modelos para la auditoría.
 AUDITLOG_INCLUDE_ALL_MODELS = True
 
 # Configuración de URLs raíz
@@ -105,12 +108,12 @@ WSGI_APPLICATION = "config.wsgi.application"
 # Configuración de Base de Datos con PostgreSQL
 DATABASES = {
     "default": {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': "estructura_django_db",
-        'USER': "postgres",
-        'PASSWORD': "MyGPUeZVeeaTrWUE8xrZ",
-        'HOST': "estructura-django-db.cbgwwkuui0z9.us-east-2.rds.amazonaws.com",
-        'PORT': 5432
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": "estructura_django_db",
+        "USER": "postgres",
+        "PASSWORD": "MyGPUeZVeeaTrWUE8xrZ",
+        "HOST": "estructura-django-db.cbgwwkuui0z9.us-east-2.rds.amazonaws.com",
+        "PORT": 5432,
     }
 }
 
@@ -131,9 +134,12 @@ USE_I18N = True
 USE_TZ = True
 
 # Configuración de archivos estáticos (CSS, JS, imágenes)
-STATIC_URL = '/static/'
+STATIC_URL = "/static/"
 STATICFILES_DIRS = [BASE_DIR / "app/static"]
-STATIC_ROOT = 'static'
+# Usamos una ruta absoluta para STATIC_ROOT para que collectstatic los recopile correctamente
+STATIC_ROOT = BASE_DIR / "staticfiles"
+# Configuración de almacenamiento de archivos estáticos con compresión y cacheo
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 # Configuración de archivos de medios (subidos por usuarios)
 MEDIA_URL = "/media/"
@@ -148,4 +154,3 @@ LOGOUT_REDIRECT_URL = "/authentication/login/"
 
 # Configurar el modelo de usuario personalizado
 AUTH_USER_MODEL = f"{APP_NAME}.Usuario"
-
