@@ -60,7 +60,8 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "app",
-    "auditlog"
+    "auditlog",
+    "widget_tweaks"
 ]
 
 # Middleware

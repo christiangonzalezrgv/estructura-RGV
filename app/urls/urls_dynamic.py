@@ -6,7 +6,6 @@ from ..views.views_dynamic import (
     datos,
     eliminar_record,
     formulario_record,
-    lista
 )
 
 urlpatterns = [
@@ -16,5 +15,4 @@ urlpatterns = [
     path("db/<table_name>/datos", datos, name="datos"),
     path("db/<table_name>/eliminar/<id>", eliminar_record, name="eliminar_record"),
     path("db/<table_name>/formulario/<id>", formulario_record, name="formulario_record"),
-    path("db/obtener/tablas", lista, name="lista"),
 ]

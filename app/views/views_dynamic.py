@@ -1,6 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import JsonResponse
-from ..models import *
+from ..models import Archivos
+#from ..django_models import DynamicModelForm
 from django.contrib import messages
 from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
@@ -14,7 +15,9 @@ from django.utils.dateformat import format as date_format
 from django.utils.timezone import now
 from django import forms
 from django.conf import settings
-from app.apps import TABLE_NAMES
+import uuid 
+from app.services.boto3_s3 import S3Service
+
 
 def get_all_models():
     """
@@ -42,15 +45,6 @@ def get_model_by_name(table_name):
 def sanitize_data(model, data):
     pass
 
-def lista(request):
-    def record_to_dict(tablas):
-        result = {}
-        result = {"tablas": tablas}
-        return result
-            
-    dict_tablas = record_to_dict(TABLE_NAMES)
-    return render(request, "lista.html", dict_tablas)
-
 @login_required
 def list_records(request, table_name):
     # Ruta para listar todos los registros de una tabla de forma dinámica.
@@ -59,8 +53,12 @@ def list_records(request, table_name):
         messages.error(request, f"La tabla {table_name} no existe.")
         return HttpResponseRedirect('/')
     
-    records = model.objects.all()
-    columns = [field.name for field in model._meta.fields]
+    # Obtener todos los registros, excluyendo 'password'
+    fields_to_include = [field.name for field in model._meta.fields if field.name != "password"]
+    records = model.objects.values(*fields_to_include)
+    
+    # Columnas sin 'password'
+    columns = fields_to_include
 
     context = {
         "records": records,
@@ -77,24 +75,69 @@ def list_records(request, table_name):
 @login_required
 def create_record(request, table_name):
     model = get_model_by_name(table_name)
+    #fields = model._meta.get_fields(include_parents=True)
+    #for field in fields:
+        #print(field.name)
     if not model:
         messages.error(request, f"La tabla '{table_name}' no existe.")
         return redirect('list_records', table_name=table_name)
-
+    
     class DynamicModelForm(forms.ModelForm):
         class Meta:
             model = get_model_by_name(table_name)
-            exclude = ['fecha_creado'] if 'fecha_creado' in [f.name for f in model._meta.fields] else []
+            exclude = ['fecha_creado', 'fecha_hoy','password', 'last_login', 'is_superuser', 'is_active', 'is_staff', 'groups', 'user_permissions']
+
+        archivo = forms.FileField(
+            label="Nombre de archivo",
+            required=False,
+            widget=forms.ClearableFileInput(attrs={'class': 'hidden', 'id': 'file-upload'}),
+        ) 
+
 
     if request.method == 'POST':
         form = DynamicModelForm(request.POST)
         if form.is_valid():
-            new_record = form.save(commit=False)
-            if 'fecha_hoy' in [f.name for f in model._meta.fields]:
-                new_record.fecha_hoy = now()
+            if (table_name == "nombre_app_prueba"):
+                new_record = form.save(commit=False)
+                if 'fecha_hoy' in [f.name for f in model._meta.fields]:
+                    new_record.fecha_hoy = now()
+                new_record.save()
+                # Subir multiples archivos
+                archivos = request.FILES.getlist('archivos[]')
+                if archivos:
+                    for archivo in archivos:
+                        if archivo and archivo.name:
+                            file_uuid = str(uuid.uuid4())
+                            filepath = f"{file_uuid}_{archivo.name}"
+                            #s3_service.upload_file(archivo, file_uuid) #Se sube el archivo a S3
+                            info_archivo = Archivos(
+                            id=file_uuid,
+                            filename=archivo.name,
+                            filepath=filepath )
+                            info_archivo.save()
+                            new_record.archivo.add(info_archivo)
+
+                # Subir archivo unico
+                archivo = request.FILES.get('archivo')
+                if archivo and archivo.name:
+                    file_uuid = str(uuid.uuid4())
+                    filepath = f"{file_uuid}_{archivo.name}"
+                    #s3_service.upload_file(archivo, file_uuid) #Se sube el archivo a S3
+                    info_archivo = Archivos(
+                        id=file_uuid,
+                        filename=archivo.name,
+                        filepath=filepath
+                    )
+                    info_archivo.save()
+                    new_record.archivo.add(info_archivo)
+            else:
+                new_record = form.save(commit=False)
+                if 'fecha_hoy' in [f.name for f in model._meta.fields]:
+                    new_record.fecha_hoy = now()
+
             try:
                 new_record.save()
-                messages.success(request, f"Registro creado exitosamente en '{table_name}'.")
+                messages.success(request, "Registro creado exitosamente.")
                 return redirect('list_records', table_name=table_name)
             except Exception as e:
                 messages.error(request, f"Error al crear el registro: {str(e)}")
@@ -217,17 +260,25 @@ def eliminar_record(request, table_name, id):
 
     record = model.objects.get(id=id)
     record.delete()
-    messages.success(request, f"Registro eliminado exitosamente en '{table_name}'")
+    messages.success(request, "Registro eliminado exitosamente")
     return HttpResponseRedirect(f'/db/{table_name}')
 
 
 @login_required
 def formulario_record(request, table_name, id):
     model = get_model_by_name(table_name)
+
     class DynamicModelForm(forms.ModelForm):
-            class Meta:
-                model = get_model_by_name(table_name)
-                exclude = ['fecha_creado'] if 'fecha_creado' in [f.name for f in model._meta.fields] else []
+        class Meta:
+            model = get_model_by_name(table_name)
+            exclude = ['fecha_creado', 'password', 'last_login', 'is_superuser', 'is_active', 'is_staff', 'user_permissions']
+
+        archivo = forms.FileField(
+            label="Nombre de archivo",
+            required=False,
+            widget=forms.ClearableFileInput(attrs={'class': 'hidden', 'id': 'file-upload'}),
+        ) 
+
     if not model:
         messages.error(request, f"La tabla {table_name} no existe.")
         return HttpResponseRedirect(f'/db/{table_name}')
