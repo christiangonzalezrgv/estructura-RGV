@@ -1,0 +1,52 @@
+<div id="actions" class="hidden fixed inset-0 flex items-center justify-center bg-black/50 z-50">
+    <div
+        class="relative bg-white dark:bg-dark dark:border-gray/20 border-2 border-lightgray/10 p-5 rounded-lg space-y-6">
+        <div>
+            <!-- Botón para cerrar el popup -->
+            <button onclick="closeActions()" type="button"
+                class="absolute top-2 right-2 hover:opacity-80 transition-transform duration-300">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="w-5 h-5">
+                    <path
+                        d="M12 10.586l4.95-4.95 1.414 1.414L13.414 12l4.95 4.95-1.414 1.414L12 13.414l-4.95 4.95-1.414-1.414L10.586 12 5.636 7.05l1.414-1.414L12 10.586z"
+                        fill="currentColor"></path>
+                </svg>
+            </button>
+            <h3 class="text-lg font-semibold mb-4">Acciones</h3>
+        </div>
+        <div class="flex gap-4">
+            <!-- Botón para descargar -->
+            <button data-action="agregar_grupo" type="button" class="btn flex items-center gap-2 bg-primary border border-primary rounded-md text-white transition-all duration-300 hover:bg-primary/[0.85] hover:border-primary/[0.85]">
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M13 7.00005L7 7.00005M7 7.00005L1 7.00005M7 7.00005L7 1M7 7.00005L7 13" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                </svg>
+                Add Event
+            </button>
+        </div>
+    </div>
+</div>
+<form id="action_buttons" method="POST" style="display: none;">{% csrf_token %}</form>
+<script>
+    /**
+     * Abre el popup de acciones y configura los enlaces de cada botón según el registro seleccionado.
+     * @param {string} form - Ruta base para las acciones.
+     * @param {string|number} recordId - ID del registro seleccionado.
+     */
+    function openActions(form, recordId) {
+        const popupActions = document.getElementById('actions');
+        popupActions.classList.remove('hidden');
+
+        const groupButton = document.querySelector('button[data-action="agregar_grupo"]');
+
+
+        // Para edición se llama a /formulario vía GET
+        groupButton.setAttribute('onclick', `redirectActions('/grupo/${recordId}')`);
+    }
+
+    /**
+     * Cierra el popup de acciones.
+     */
+    function closeActions() {
+        const popupActions = document.getElementById('actions');
+        popupActions.classList.add('hidden');
+    }
+</script>

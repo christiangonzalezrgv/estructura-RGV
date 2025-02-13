@@ -82,16 +82,22 @@ def create_record(request, table_name):
         messages.error(request, f"La tabla '{table_name}' no existe.")
         return redirect('list_records', table_name=table_name)
     
-    class DynamicModelForm(forms.ModelForm):
-        class Meta:
-            model = get_model_by_name(table_name)
-            exclude = ['fecha_creado', 'fecha_hoy','password', 'last_login', 'is_superuser', 'is_active', 'is_staff', 'groups', 'user_permissions']
+    if (table_name == "nombre_app_prueba"):
+        class DynamicModelForm(forms.ModelForm):
+            class Meta:
+                model = get_model_by_name(table_name)
+                exclude = ['fecha_creado', 'fecha_hoy','password', 'last_login', 'is_superuser', 'is_active', 'is_staff', 'groups', 'user_permissions']
 
-        archivo = forms.FileField(
-            label="Nombre de archivo",
-            required=False,
-            widget=forms.ClearableFileInput(attrs={'class': 'hidden', 'id': 'file-upload'}),
-        ) 
+            archivo = forms.FileField(
+                label="Nombre de archivo",
+                required=False,
+                widget=forms.ClearableFileInput(attrs={'class': 'hidden', 'id': 'file-upload'}),
+            )
+    else:
+        class DynamicModelForm(forms.ModelForm):
+            class Meta:
+                model = get_model_by_name(table_name)
+                exclude = ['fecha_creado', 'fecha_hoy','password', 'last_login', 'is_superuser', 'is_active', 'is_staff', 'groups', 'user_permissions']
 
 
     if request.method == 'POST':
@@ -267,17 +273,22 @@ def eliminar_record(request, table_name, id):
 @login_required
 def formulario_record(request, table_name, id):
     model = get_model_by_name(table_name)
+    if (table_name == "nombre_app_prueba"):
+        class DynamicModelForm(forms.ModelForm):
+            class Meta:
+                model = get_model_by_name(table_name)
+                exclude = ['fecha_creado', 'password', 'last_login', 'groups', 'is_superuser', 'is_active', 'is_staff', 'user_permissions']
 
-    class DynamicModelForm(forms.ModelForm):
-        class Meta:
-            model = get_model_by_name(table_name)
-            exclude = ['fecha_creado', 'password', 'last_login', 'is_superuser', 'is_active', 'is_staff', 'user_permissions']
-
-        archivo = forms.FileField(
-            label="Nombre de archivo",
-            required=False,
-            widget=forms.ClearableFileInput(attrs={'class': 'hidden', 'id': 'file-upload'}),
-        ) 
+            archivo = forms.FileField(
+                label="Nombre de archivo",
+                required=False,
+                widget=forms.ClearableFileInput(attrs={'class': 'hidden', 'id': 'file-upload'}),
+            )
+    else:
+        class DynamicModelForm(forms.ModelForm):
+            class Meta:
+                model = get_model_by_name(table_name)
+                exclude = ['fecha_creado', 'password', 'last_login', 'groups', 'is_superuser', 'is_active', 'is_staff', 'user_permissions']
 
     if not model:
         messages.error(request, f"La tabla {table_name} no existe.")

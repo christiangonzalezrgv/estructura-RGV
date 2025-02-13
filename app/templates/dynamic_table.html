@@ -66,7 +66,7 @@
                                 {% for column in columns %}
                                 <th data-column="{{ column }}">
                                     <div class="flex items-center justify-between gap-2">
-                                        <p>{{ column }}</p>
+                                        <p>{{ column|format_name|title }}</p>
                                         <div class="flex flex-col">
                                             <!-- Icono para ordenar ascendente -->
                                             <svg @click="sort('{{ column }}', sorted.rule === 'asc' ? 'desc' : 'asc')"

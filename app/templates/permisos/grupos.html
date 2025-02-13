@@ -1,0 +1,113 @@
+{% extends 'partials/layout1.html' %}
+
+{% block content %}
+{% include "partials/flash_alerts.html" %}
+{% include "partials/loader.html" %}
+{% load custom_filters %}
+
+<div class="flex flex-col gap-5 min-h-[calc(100vh-188px)] sm:min-h-[calc(100vh-204px)]">
+	<div class="grid grid-cols-1 gap-5">
+		<div id="view_test"
+			class="bg-white dark:bg-dark dark:border-gray/20 border-2 border-lightgray/10 p-5 rounded-lg">
+			<div>
+				<div class="flex justify-between items-center gap-3">
+					<h2 class="text-base font-semibold mb-4">Usuarios con grupos</h2>
+				</div>
+				<div class="overflow-auto">
+					<table class="min-w-[640px] w-full table-hover">
+						<thead class="text-left">
+							<tr>
+								<th>
+									Nombre
+								</th>
+								<th>
+									Grupo
+								</th>
+							</tr>
+						</thead>
+						<tbody>
+							{% for usuario_info in usuarios_con_grupos %}
+							<li>
+								{{ usuario_info.usuario.nombre }}
+								<ul>
+									{% for grupo in usuario_info.grupos %}
+									<li>{{ grupo.name }}</li>
+									{% empty %}
+									<li>Este usuario no pertenece a ningún grupo.</li>
+									{% endfor %}
+								</ul>
+							</li>
+							{% endfor %}
+						</tbody>
+
+					</table>
+				</div>
+				<!-- Paginación -->
+				<ul class="inline-flex items-center gap-1">
+					<li>
+						<button type="button" @click.prevent="changePage(1)"
+							class="flex justify-center px-2 h-9 items-center rounded transition border border-gray/20 hover:border-gray/60">
+							Primera
+						</button>
+					</li>
+					<li>
+						<button type="button" @click="changePage(pagination.currentPage - 1)"
+							class="flex justify-center px-2 h-9 items-center rounded transition border border-gray/20 hover:border-gray/60">
+							Anterior
+						</button>
+					</li>
+					<template x-for="item in pages" :key="item">
+						<li>
+							<button @click="changePage(item)" type="button"
+								class="flex justify-center h-9 w-9 items-center rounded transition border border-gray/20 hover:border-gray/60"
+								:class="{ 'border-primary text-primary': pagination.currentPage === item }">
+								<span x-text="item"></span>
+							</button>
+						</li>
+					</template>
+					<li>
+						<button @click="changePage(pagination.currentPage + 1)" type="button"
+							class="flex justify-center px-2 h-9 items-center rounded transition border border-gray/20 hover:border-gray/60">
+							Siguiente
+						</button>
+					</li>
+					<li>
+						<button @click.prevent="changePage(pagination.lastPage)" type="button"
+							class="flex justify-center px-2 h-9 items-center rounded transition border border-gray/20 hover:border-gray/60">
+							Última
+						</button>
+					</li>
+				</ul>
+			</div>
+		</div>
+		{% include 'partials/crud_actions.html' %}
+	</div>
+</div>
+<!-- Incluir archivos JS centralizados -->
+<script src="/static/js/data-search.js"></script>
+<script src="/static/js/data_table.js"></script>
+<script src="/static/js/loader.js"></script>
+<script src="/static/js/dynamic_table_init.js"></script>
+
+
+
+
+
+
+<!--
+<h2>Usuarios y sus grupos</h2>
+<ul>
+	{% for usuario_info in usuarios_con_grupos %}
+	<li>
+		<strong>Usuario:</strong> {{ usuario_info.usuario.nombre }}
+		<ul>
+			{% for grupo in usuario_info.grupos %}
+			<li>{{ grupo.name }}</li>
+			{% empty %}
+			<li>Este usuario no pertenece a ningún grupo.</li>
+			{% endfor %}
+		</ul>
+	</li>
+	{% endfor %}
+</ul>
+{% endblock %}
