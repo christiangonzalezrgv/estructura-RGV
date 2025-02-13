@@ -1,11 +1,85 @@
-{% extends 'partials/layout1.html' %}
-
+{% extends "partials/layout1.html" %}
 {% block content %}
-<div class="flex flex-col gap-5 min-h-[calc(100vh-188px)] sm:min-h-[calc(100vh-204px)]">
-    <div class="grid grid-cols-1 gap-5">
-        <div class="bg-white dark:bg-dark dark:border-gray/20 border-2 border-lightgray/10 p-5 rounded-lg">
-            <h1>Inicio</h1>
+{% include "partials/flash_alerts.html" %}
+
+<div id="main" class="flex flex-col gap-5 min-h-[calc(100vh-188px)] sm:min-h-[calc(100vh-204px)]">
+    <div class="grid grid-cols-3 xl:grid-cols-3 gap-5">
+        <div class="bg-white dark:bg-dark dark:border-gray/20 border-2 border-lightgray/10 p-5 rounded-lg space-y-6">
+            <div class="flex items-center gap-2.5 justify-center">
+                <p class="font-semibold">Total de registros</p>
+            </div>
+            <div class="flex gap-2.5 xl:gap-[30px] flex-wrap grid-cols-3 justify-center">
+                <div class="flex flex-col items-center">
+                    <span class="text-lg font-bold">
+                        {{ paneles.0 }}
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="bg-white dark:bg-dark dark:border-gray/20 border-2 border-lightgray/10 p-5 rounded-lg space-y-6">
+            <div class="flex items-center gap-2.5 justify-center">
+                <p class="font-semibold">Numero mayor</p>
+            </div>
+            <div class="flex gap-2.5 xl:gap-[30px] flex-wrap grid-cols-3 justify-center">
+                <div class="flex flex-col items-center">
+                    <span class="text-lg font-bold">
+                        {{ paneles.1 }}
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="bg-white dark:bg-dark dark:border-gray/20 border-2 border-lightgray/10 p-5 rounded-lg space-y-6">
+            <div class="flex items-center gap-2.5 justify-center">
+                <p class="font-semibold">Numero menor</p>
+            </div>
+            <div class="flex gap-2.5 xl:gap-[30px] flex-wrap grid-cols-3 justify-center">
+                <div class="flex flex-col items-center">
+                    <span class="text-lg font-bold">
+                        {{ paneles.2 }}
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="grid grid-cols-2 xl:grid-cols-1 gap-5">
+        <div class="grid grid-cols-1 xl:grid-cols-1 gap-5">
+            <div class="bg-white dark:bg-dark dark:border-gray/20 border-2 border-lightgray/10 p-5 rounded-lg">
+                <div class="mb-[30px] flex items-center flex-wrap">
+                    <h2 class="flex-1 font-semibold">Gráfica de línea</h2>
+                    <div>
+                        <select id="select_one" class="form-select h-8 rounded-full border-none font-semibold text-xs" onchange="grafica_dinamica('#grafica_linea', 'line', 'date', 'total', `/api/prueba/${select_one.value}`)">                            >
+                            <option value="todos">Todos</option>
+                            {% for valor in opciones %}
+                                <option value="{{ valor }}">{{ valor }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <div id="grafica_linea"></div>
+            </div>
+        </div>
+        <div class="grid grid-cols-1 xl:grid-cols-1 gap-5">
+            <div class="bg-white dark:bg-dark dark:border-gray/20 border-2 border-lightgray/10 p-5 rounded-lg">
+                <div class="mb-[30px] flex items-center flex-wrap">
+                    <h2 class="flex-1 font-semibold">Gráfica de barra</h2>
+                    <div>
+                        <select id="select_two" class="form-select h-8 rounded-full border-none font-semibold text-xs" onchange="grafica_dinamica('#grafica_barra', 'bar', 'date', 'total', `/api/prueba/${select_two.value}`)">      
+                            <option value="todos">Todos</option>
+                            {% for valor in opciones %}
+                            <option value="{{ valor }}">{{ valor }}</option>
+                        {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <div id="grafica_barra"></div>
+            </div>
         </div>
     </div>
 </div>
-{% endblock %}
+<script src="/static/js/apexcharts.js"></script>
+<script src="/static/js/graficas/general.js"></script>
+<script>
+    grafica_dinamica("#grafica_linea","line","date","total",`/api/prueba/${select_one.value}`);
+    grafica_dinamica("#grafica_barra","bar","date","total",`/api/prueba/${select_two.value}`);
+</script>
+{% endblock content %}

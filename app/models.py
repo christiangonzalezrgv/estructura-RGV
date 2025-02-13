@@ -7,6 +7,8 @@ from django.contrib.auth.models import (
     PermissionsMixin,
 )
 from django.db import models
+from django.utils.timezone import now
+import uuid
 
 from .models_base import BaseModel
 
@@ -83,4 +85,39 @@ class LogAuditoria(BaseModel):
     class Meta:
         verbose_name = "Log de Auditoría"
         verbose_name_plural = "Logs de Auditoría"
+        app_label = settings.APP_NAME
+
+class Archivos(BaseModel):
+    id = models.UUIDField(default=uuid.uuid4, primary_key=True)
+    filename = models.CharField(max_length=255)
+    filepath = models.CharField(max_length=255)
+    uploaded_at = models.DateTimeField(default=now)
+
+    class Meta:
+        verbose_name = "Archivo"
+        verbose_name_plural = "Archivos"
+        app_label = settings.APP_NAME
+
+class Prueba(BaseModel):
+    fecha = models.DateField()
+    numero = models.FloatField()
+    texto = models.CharField(max_length= 100)
+    texto_grande = models.TextField()
+    json = models.JSONField()
+    boolean = models.BooleanField()
+    fecha_hoy = models.DateTimeField(default=now)
+    archivo = models.ManyToManyField(Archivos, through='RelacionArchivos', related_name='pruebas')
+    class Meta:
+        verbose_name = "Prueba"
+        verbose_name_plural = "Pruebas"
+        app_label = settings.APP_NAME    
+    
+class RelacionArchivos(BaseModel):
+    id_archivo = models.ForeignKey(Archivos, on_delete=models.CASCADE)
+    id_prueba = models.ForeignKey(Prueba, on_delete=models.CASCADE)
+
+    class Meta:
+        verbose_name = "Relacion Archivos"
+        verbose_name_plural = "Relaciones Archivos"   
+        unique_together = ('id_archivo', 'id_prueba')
         app_label = settings.APP_NAME

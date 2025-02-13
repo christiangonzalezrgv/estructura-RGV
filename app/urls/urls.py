@@ -10,10 +10,13 @@ from ..views.views import (
     HealthCheckView,
     IndexView,
     UserLoginView,
+    api_prueba,
 )
 
 urlpatterns = [
     path("", IndexView.as_view(), name="index"),
+    path("api/prueba", api_prueba, name='api_prueba'),
+    path("api/prueba/<num>", api_prueba, name='api_prueba'),
     path("documentacion/", DocumentacionView.as_view(), name="documentacion"),
     path("auditoria/", AuditoriaView.as_view(), name="auditoria"),
     path("auth/login/", UserLoginView.as_view(), name="login"),

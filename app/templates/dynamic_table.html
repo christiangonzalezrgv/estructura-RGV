@@ -5,6 +5,7 @@
 {% block content %}
 {% include "partials/flash_alerts.html" %}
 {% include "partials/loader.html" %}
+{% load custom_filters %}
 
 <!-- Elemento oculto para pasar datos al JS: nombre de tabla y columnas -->
 {{ columns|json_script:"columns-data" }}
@@ -16,17 +17,17 @@
             <div class="overflow-auto space-y-4" x-data="tabla"
                 x-init="initData(); $watch('searchInput', value => { search(value) })">
                 <div class="flex justify-between items-center gap-3">
-                    <h2 class="text-base font-semibold mb-4">{{ table_name|cut:"nombre_app_"|title }}</h2>
+                    <h2 class="text-base font-semibold mb-4">{{ table_name|format_name|title }}</h2>
                     <div class="flex gap-2">
                         <!-- Botón para agregar nuevo registro -->
                         <button onclick="window.location.href='{% url 'create_record' table_name %}'" type="submit"
-							class="border w-10 h-10 flex items-center justify-center text-primary border-transparent rounded-md transition-all duration-300 hover:text-white hover:bg-primary bg-primary/10">
-							<svg width="14" height="14" viewBox="0 0 14 14" fill="none"
-								xmlns="http://www.w3.org/2000/svg">
-								<path d="M13 7.00005L7 7.00005M7 7.00005L1 7.00005M7 7.00005L7 1M7 7.00005L7 13"
-									stroke="currentColor" stroke-width="2" stroke-linecap="round" />
-							</svg>
-						</button>
+                            class="border w-10 h-10 flex items-center justify-center text-primary border-transparent rounded-md transition-all duration-300 hover:text-white hover:bg-primary bg-primary/10">
+                            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path d="M13 7.00005L7 7.00005M7 7.00005L1 7.00005M7 7.00005L7 1M7 7.00005L7 13"
+                                    stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                            </svg>
+                        </button>
                         <!-- Botón para generar Excel -->
                         <button id="export_button" onclick="generarExcel('{{ table_name }}')" type="button"
                             class="border w-10 h-10 flex items-center justify-center text-primary border-transparent rounded-md transition-all duration-300 hover:text-white hover:bg-primary bg-primary/10">
@@ -87,6 +88,10 @@
                                     </div>
                                 </th>
                                 {% endfor %}
+
+                                {% if table_name == "nombre_app_prueba" %}
+                                <th>archivos</th>
+                                {% endif %}
                             </tr>
                         </thead>
                         <tbody>
@@ -101,6 +106,23 @@
                                             <span x-text="record[col] ? record[col] : '-'"></span>
                                         </td>
                                     </template>
+                                    {% if table_name == "nombre_app_prueba" %}
+                                    <td>
+                                        <a :href="`/db/nombre_app_archivos`"
+                                            class="border w-10 h-10 flex items-center justify-center text-primary border-transparent rounded-md transition-all duration-300 hover:text-white hover:bg-primary bg-primary/10">
+                                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                                xmlns="http://www.w3.org/2000/svg">
+                                                <path opacity="0.5"
+                                                    d="M2 12C2 7.28595 2 4.92893 3.46447 3.46447C4.92893 2 7.28595 2 12 2C16.714 2 19.0711 2 20.5355 3.46447C22 4.92893 22 7.28595 22 12C22 16.714 22 19.0711 20.5355 20.5355C19.0711 22 16.714 22 12 22C7.28595 22 4.92893 22 3.46447 20.5355C2 19.0711 2 16.714 2 12Z"
+                                                    stroke="currentColor" stroke-width="1.5" />
+                                                <path d="M8.5 9L11.5 12L8.5 15" stroke="currentColor" stroke-width="1.5"
+                                                    stroke-linecap="round" stroke-linejoin="round" />
+                                                <path d="M12.5 9L15.5 12L12.5 15" stroke="currentColor"
+                                                    stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                                            </svg>
+                                        </a>
+                                    </td>
+                                    {% endif %}
                                 </tr>
                             </template>
                             <!-- Si no hay registros, se muestra un mensaje -->
