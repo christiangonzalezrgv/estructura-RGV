@@ -1,14 +1,17 @@
 # app/views.py
 
+from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView, LogoutView
+from django.http import HttpResponse
 from django.urls import reverse_lazy
+from django.views import View
 from django.views.generic import TemplateView
-from django.conf import settings
 from django.db import connection
-from ..models import Prueba  # Asegúrate de importar tu modelo Prueba
+from ..models import Prueba
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
+
 
 
 class IndexView(LoginRequiredMixin, TemplateView):
@@ -98,7 +101,7 @@ class ForgotPasswordView(TemplateView):
         context = super().get_context_data(**kwargs)
         context["activeMenu"] = "forgotpassword"
         return context
-    
+ 
 @login_required
 def api_prueba(request, num=None):
     numero = num
@@ -127,3 +130,8 @@ def api_prueba(request, num=None):
         ]
 
     return JsonResponse(results, safe=False)
+
+
+class HealthCheckView(View):
+    def get(self, request, *args, **kwargs):
+        return HttpResponse("OK", status=200)
