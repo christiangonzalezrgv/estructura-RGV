@@ -66,7 +66,7 @@
                                 {% for column in columns %}
                                 <th data-column="{{ column }}">
                                     <div class="flex items-center justify-between gap-2">
-                                        <p>{{ column }}</p>
+                                        <p>{{ column|format_name|title }}</p>
                                         <div class="flex flex-col">
                                             <!-- Icono para ordenar ascendente -->
                                             <svg @click="sort('{{ column }}', sorted.rule === 'asc' ? 'desc' : 'asc')"
@@ -108,7 +108,7 @@
                                     </template>
                                     {% if table_name == "nombre_app_prueba" %}
                                     <td>
-                                        <a :href="`/db/nombre_app_archivos`"
+                                        <a :href="`/archivos/${record.id}`"
                                             class="border w-10 h-10 flex items-center justify-center text-primary border-transparent rounded-md transition-all duration-300 hover:text-white hover:bg-primary bg-primary/10">
                                             <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
                                                 xmlns="http://www.w3.org/2000/svg">

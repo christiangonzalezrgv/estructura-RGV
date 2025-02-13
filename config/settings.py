@@ -155,3 +155,12 @@ LOGOUT_REDIRECT_URL = "/authentication/login/"
 
 # Configurar el modelo de usuario personalizado
 AUTH_USER_MODEL = f"{APP_NAME}.Usuario"
+
+#Variables para subir archivos a S3
+AWS_ACCESS_KEY_ID = os.getenv("AWS_ACCESS_KEY_ID", "AWS_ACCESS_KEY_ID")
+AWS_SECRET_ACCESS_KEY = os.getenv("AWS_SECRET_ACCESS_KEY", "AWS_SECRET_ACCESS_KEY")
+AWS_REGION = os.getenv("AWS_REGION", "AWS_REGION")
+AWS_S3_BUCKET_NAME = os.getenv("AWS_S3_BUCKET_NAME", "AWS_S3_BUCKET_NAME")
+profile = os.getenv("profile", "profile")
+
+APPEND_SLASH=False

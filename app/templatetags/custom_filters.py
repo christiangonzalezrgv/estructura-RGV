@@ -18,3 +18,7 @@ def format_name(value):
     value = value.replace("django_", " ")
     value = value.replace("auth_", " ")
     return value.replace("_", " ")
+
+@register.filter
+def dictlookup(dictionary, key):
+    return dictionary.get(key, "-")

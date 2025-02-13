@@ -59,7 +59,8 @@ def list_records(request, table_name):
     
     # Columnas sin 'password'
     columns = fields_to_include
-
+    print(records)
+    print(columns)
     context = {
         "records": records,
         "columns": columns,
@@ -102,6 +103,7 @@ def create_record(request, table_name):
                 if 'fecha_hoy' in [f.name for f in model._meta.fields]:
                     new_record.fecha_hoy = now()
                 new_record.save()
+                s3_service = S3Service()
                 # Subir multiples archivos
                 archivos = request.FILES.getlist('archivos[]')
                 if archivos:
@@ -109,7 +111,7 @@ def create_record(request, table_name):
                         if archivo and archivo.name:
                             file_uuid = str(uuid.uuid4())
                             filepath = f"{file_uuid}_{archivo.name}"
-                            #s3_service.upload_file(archivo, file_uuid) #Se sube el archivo a S3
+                            s3_service.upload_file(archivo, file_uuid) #Se sube el archivo a S3
                             info_archivo = Archivos(
                             id=file_uuid,
                             filename=archivo.name,
@@ -122,7 +124,7 @@ def create_record(request, table_name):
                 if archivo and archivo.name:
                     file_uuid = str(uuid.uuid4())
                     filepath = f"{file_uuid}_{archivo.name}"
-                    #s3_service.upload_file(archivo, file_uuid) #Se sube el archivo a S3
+                    s3_service.upload_file(archivo, file_uuid) #Se sube el archivo a S3
                     info_archivo = Archivos(
                         id=file_uuid,
                         filename=archivo.name,

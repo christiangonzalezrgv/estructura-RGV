@@ -7,4 +7,5 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("", include("app.urls.urls")),
     path("", include("app.urls.urls_dynamic")),
+    path("", include("app.urls.urls_archivos")),
 ]

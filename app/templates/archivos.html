@@ -1,0 +1,126 @@
+<!-- templates/dynamic_table.html -->
+
+{% extends 'partials/layout1.html' %}
+
+{% block content %}
+{% include "partials/flash_alerts.html" %}
+{% include "partials/loader.html" %}
+{% load custom_filters %}
+{{ columns|json_script:"columns-data" }}
+<div id="table-data" data-table="{{ table_name }}" data-columns-id="columns-data"></div>
+<div class="flex flex-col gap-5 min-h-[calc(100vh-188px)] sm:min-h-[calc(100vh-204px)]">
+    <div class="grid grid-cols-1 gap-5">
+        <div id="view_test"
+            class="bg-white dark:bg-dark dark:border-gray/20 border-2 border-lightgray/10 p-5 rounded-lg">
+            <div class="overflow-auto space-y-4" x-data="tabla"
+                x-init="initData(); $watch('searchInput', value => { search(value) })">
+                <div class="flex justify-between items-center gap-3">
+                    <h2 class="text-base font-semibold mb-4">Archivos de registro con ID {{id}}</h2>
+                </div>
+                <div class="flex justify-between items-center gap-3">
+                    <div class="flex space-x-2 items-center">
+                        <p>Ver</p>
+                        <select id="filter" class="form-select !w-20" x-model="view" @change="changeView()">
+                            <option value="5">5</option>
+                            <option value="10">10</option>
+                            <option value="25">25</option>
+                            <option value="50">50</option>
+                            <option value="100">100</option>
+                        </select>
+                    </div>
+                    <div>
+                        <input id="search" x-model="searchInput" type="text" class="form-input" placeholder="Buscar...">
+                    </div>
+                </div>
+                <div class="overflow-auto">
+                    <table class="min-w-[640px] w-full table-hover">
+                        <thead class="text-left">
+                            <tr>
+                                {% for column in columns %}
+                                <th data-column="{{ column }}">
+                                    <div class="flex items-center justify-between gap-2">
+                                        <p>{{ column|format_name|title }}</p>
+                                        <div class="flex flex-col">
+                                            <!-- Icono para ordenar ascendente -->
+                                            <svg @click="sort('{{ column }}', sorted.rule === 'asc' ? 'desc' : 'asc')"
+                                                fill="none" stroke-linecap="round" stroke-linejoin="round"
+                                                stroke-width="4" viewBox="0 0 24 24" stroke="currentColor"
+                                                class="h-3 w-3 cursor-pointer text-muted"
+                                                x-bind:class="{'!text-black': sorted.field === '{{ column }}' && sorted.rule === 'asc'}">
+                                                <path d="M5 15l7-7 7 7"></path>
+                                            </svg>
+                                            <!-- Icono para ordenar descendente -->
+                                            <svg @click="sort('{{ column }}', sorted.rule === 'desc' ? 'asc' : 'desc')"
+                                                fill="none" stroke-linecap="round" stroke-linejoin="round"
+                                                stroke-width="4" viewBox="0 0 24 24" stroke="currentColor"
+                                                class="h-3 w-3 cursor-pointer text-muted"
+                                                x-bind:class="{'!text-black': sorted.field === '{{ column }}' && sorted.rule === 'desc'}">
+                                                <path d="M19 9l-7 7-7-7"></path>
+                                            </svg>
+                                        </div>
+                                    </div>
+                                </th>
+                                {% endfor %}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for record in records %}
+                                <tr class="cursor-pointer hover:bg-gray-100">
+                                    {% for column in columns %}
+                                        <td>
+                                            {{ record|dictlookup:column }}
+                                        </td>
+                                    {% endfor %}
+                                    <td>
+                                        <button @click="downloadFile('{{ record.filepath }}')" class="border w-10 h-10 flex items-center justify-center text-primary border-transparent rounded-md transition-all duration-300 hover:text-white hover:bg-primary bg-primary/10">
+                                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M12 3V16M12 16L16 11.625M12 16L8 11.625" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                                                <path d="M3 15C3 17.8284 3 19.2426 3.87868 20.1213C4.75736 21 6.17157 21 9 21H15C17.8284 21 19.2426 21 20.1213 20.1213C21 19.2426 21 17.8284 21 15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                            </svg>
+                                        </button>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            {% if not records %}
+                                <tr>
+                                    <td colspan="{{ columns|length }}" class="text-center text-gray-500">
+                                        No se encontraron registros
+                                    </td>
+                                </tr>
+                            {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+                <ul class="inline-flex items-center gap-1">
+                    <li><button type="button" @click.prevent="changePage(1)"
+                            class="flex justify-center px-2 h-9 items-center rounded transition border border-gray/20 hover:border-gray/60">Primera</button>
+                    </li>
+                    <li><button type="button" @click="changePage(currentPage - 1)"
+                            class="flex justify-center px-2 h-9 items-center rounded transition border border-gray/20 hover:border-gray/60">Anterior</button>
+                    </li>
+                    <template x-for="item in pages">
+                        <li><button @click="changePage(item)" type="button"
+                                class="flex justify-center h-9 w-9 items-center rounded transition border border-gray/20 hover:border-gray/60"
+                                x-bind:class="{ 'border-primary text-primary': currentPage === item }"><span
+                                    x-text="item"></span></button></li>
+                    </template>
+                    <li><button @click="changePage(currentPage + 1)" type="button"
+                            class="flex justify-center px-2 h-9 items-center rounded transition border border-gray/20 hover:border-gray/60">Siguiente</button>
+                    </li>
+                    <li><button @click.prevent="changePage(pagination.lastPage)" type="button"
+                            class="flex justify-center px-2 h-9 items-center rounded transition border border-gray/20 hover:border-gray/60">Última</button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        {% include 'partials/crud_actions.html' %}
+    </div>
+</div>
+
+<!-- Incluir archivos JS centralizados -->
+<script src="/static/js/data-search.js"></script>
+<script src="/static/js/data_table.js"></script>
+<script src="/static/js/loader.js"></script>
+<script src="/static/js/descargar_archivo.js"></script>
+<script src="/static/js/dynamic_table_init.js"></script>
+{% endblock content %}

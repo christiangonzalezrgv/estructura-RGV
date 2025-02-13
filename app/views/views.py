@@ -11,6 +11,16 @@ from django.db import connection
 from ..models import Prueba
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
+from ..services.send_email import forgot_password_email
+import string
+import secrets
+from django.http import HttpResponseRedirect
+from django.contrib import messages
+from ..models import Usuario
+from ..django_models import EmailForm
+from django.shortcuts import render
+
+
 
 
 
@@ -92,7 +102,7 @@ class UserLoginView(LoginView):
 class ForgotPasswordView(TemplateView):
     """
     Vista para la página de "Olvidé mi contraseña".
-    Por el momento, solo renderiza el template sin lógica adicional.
+    Maneja el envío del formulario para generar una nueva contraseña.
     """
 
     template_name = "auth/forgotpassword.html"
@@ -100,8 +110,47 @@ class ForgotPasswordView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["activeMenu"] = "forgotpassword"
+        context["form"] = EmailForm()  # Añade el formulario al contexto
         return context
- 
+
+    def post(self, request, *args, **kwargs):
+        """
+        Maneja el envío del formulario para generar una nueva contraseña.
+        """
+        try:
+            form = EmailForm(request.POST)
+            if form.is_valid():
+                correo_electronico = form.cleaned_data["correo"]
+                usuario = Usuario.objects.filter(correo=correo_electronico).first()
+                if usuario:
+                    # Genera una nueva contraseña aleatoria
+                    alfabeto = string.ascii_letters + string.digits
+                    contrasena = ''.join(secrets.choice(alfabeto) for i in range(20))
+                    
+                    # Envía el correo electrónico con la nueva contraseña
+                    forgot_password_email(correo_electronico, contrasena)
+                    
+                    # Actualiza la contraseña del usuario en la base de datos
+                    usuario.set_password(contrasena)  # Hashea la contraseña
+                    usuario.save()
+                    
+                    # Mensaje de éxito y redirección
+                    messages.success(request, "Se ha enviado un correo electrónico con tu nueva contraseña.")
+                    return HttpResponseRedirect('/auth/login/')
+                else:
+                    # Mensaje de error si el correo no existe
+                    messages.error(request, "Correo electrónico es incorrecto. Inténtalo nuevamente.")
+                    return render(request, self.template_name, {"form": form})
+            else:
+                # Mensaje de error si el formulario no es válido
+                print(form.errors)
+                messages.error(request, "Error al generar contraseña. Verifica los datos ingresados.")
+                return render(request, self.template_name, {"form": form})
+        except Exception as e:
+            # Mensaje de error en caso de excepción
+            messages.error(request, f"Error al enviar la contraseña: {e}")
+            return HttpResponseRedirect('/auth/login/')
+
 @login_required
 def api_prueba(request, num=None):
     numero = num

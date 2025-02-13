@@ -48,7 +48,7 @@ def send_email(recipient_email, name, code,id_encuesta,centro_de_salud):
         send_html_email(
             subject="Aplicación",
             recipient_email=recipient_email,
-            template="main/partials/email_template.html",
+            template="partials/email_template.html",
             name=name,
             body_content="Acabas de crear una nueva encuesta de Aplicación.",
             details_list=[
@@ -66,7 +66,7 @@ def forgot_password_email(recipient_email,contrasena):
         send_html_email(
             subject="Nuevo contraseña - Aplicación",
             recipient_email=recipient_email,
-            template="main/partials/email_template.html",
+            template="partials/email_template.html",
             body_content="Se acaba de crear una nueva contraseña para tu correo electrónico",
             details_list=[
                 f"Nueva contraseña: {contrasena}"

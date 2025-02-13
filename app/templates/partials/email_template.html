@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>{{ subject }}</title>
+	<style>
+		body {
+			margin: 0;
+			padding: 0;
+			background-color: #f4f4f4;
+			font-family: Arial, sans-serif;
+		}
+
+		.email-container {
+			width: 100%;
+			max-width: 600px;
+			margin: 0 auto;
+			background-color: #ffffff;
+			padding: 20px;
+		}
+
+		.header {
+			text-align: center;
+			padding-bottom: 20px;
+		}
+
+		.header img {
+			max-width: 150px;
+		}
+
+		.email-body {
+			color: #333333;
+		}
+
+		.email-body p {
+			font-size: 16px;
+			line-height: 1.6;
+			margin-bottom: 20px;
+		}
+
+		/* Divider */
+		.divider {
+			border-top: 1px solid #dddddd;
+			margin: 20px 0;
+		}
+
+		/* Footer */
+		.footer {
+			text-align: center;
+			color: #333333;
+			font-size: 12px;
+			padding-top: 20px;
+		}
+
+		.footer a {
+			color: #3e5568;
+			text-decoration: none;
+		}
+
+		.footer a:hover {
+			color: #918564;
+		}
+
+		/* Lista de detalles del submit */
+		.details-list {
+			list-style-type: none;
+			padding-left: 0;
+			margin-bottom: 20px;
+		}
+
+		.details-list li {
+			font-size: 16px;
+			margin-bottom: 10px;
+			color: #333;
+		}
+
+		/* Espaciado entre body y footer */
+		.email-body,
+		.divider,
+		.footer {
+			margin: 0;
+		}
+	</style>
+</head>
+
+<body>
+	<div class="email-container">
+		<!-- Header con el logo
+    <div class="header">
+      <img src="https://i.ibb.co/64rmBtF/rgv.png" alt="RGV Logo">
+    </div>
+ -->
+		<!-- Cuerpo del email -->
+		<div class="email-body">
+			<p>Hola,</p>
+			<p>{{ body_content }}</p>
+
+			<!-- si el correo es a admin -->
+			{% if details_list %}
+			<ul class="details-list">
+				{% for detail in details_list %}
+				<li>{{ detail }}</li>
+				{% endfor %}
+			</ul>
+			{% endif %}
+		</div>
+
+		<!-- Divider -->
+		<div class="divider"></div>
+
+		<!-- Footer con espaciado corregido -->
+		<div class="footer">
+			<p>Empresa - Aplicación</p>
+		</div>
+	</div>
+</body>
+
+</html>
