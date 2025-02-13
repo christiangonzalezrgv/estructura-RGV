@@ -7,6 +7,7 @@ from ..views.views import (
     AuditoriaView,
     DocumentacionView,
     ForgotPasswordView,
+    HealthCheckView,
     IndexView,
     UserLoginView,
     api_prueba,
@@ -21,4 +22,5 @@ urlpatterns = [
     path("auth/login/", UserLoginView.as_view(), name="login"),
     path("auth/logout/", LogoutView.as_view(next_page="login"), name="logout"),
     path("auth/forgotpassword/", ForgotPasswordView.as_view(), name="forgotpassword"),
+    path("health/", HealthCheckView.as_view(), name="health"),
 ]
