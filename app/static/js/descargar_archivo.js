@@ -1,7 +1,7 @@
 	async function downloadFile(filepath) {
 		try {
 			// Solicitar la URL firmada
-			const response = await fetch("archivos/generate-presigned-url", {
+			const response = await fetch("/generate-presigned-url", {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json",
