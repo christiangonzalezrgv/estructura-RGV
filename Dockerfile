@@ -8,7 +8,7 @@ ENV PYTHONUNBUFFERED=1
 # Define el directorio de trabajo
 WORKDIR /app
 
-# Copia el archivo de dependencias y actualiza pip, luego instala las dependencias
+# Copia el archivo de dependencias, actualiza pip e instala las dependencias
 COPY requirements.txt /app/
 RUN pip install --upgrade pip && pip install -r requirements.txt
 
@@ -21,8 +21,8 @@ RUN python manage.py collectstatic --noinput
 # Da permisos de ejecución al entrypoint.sh
 RUN chmod +x entrypoint.sh
 
-# Expone el puerto 8000 (el que usará Gunicorn)
-EXPOSE 8000
+# Expone el puerto 80 (el que usará Gunicorn)
+EXPOSE 80
 
 # Define el entrypoint para el contenedor
 ENTRYPOINT ["./entrypoint.sh"]
