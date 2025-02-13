@@ -22,7 +22,7 @@ RUN python manage.py collectstatic --noinput
 RUN chmod +x entrypoint.sh
 
 # Expone el puerto 80 (el que usará Gunicorn)
-EXPOSE 8000
+EXPOSE 80
 
 # Define el entrypoint para el contenedor
 ENTRYPOINT ["./entrypoint.sh"]
