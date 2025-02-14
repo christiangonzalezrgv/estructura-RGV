@@ -1,4 +1,5 @@
 from django import template
+from django.conf import settings
 
 register = template.Library()
 
@@ -14,7 +15,7 @@ def format_name(value):
     """
     Reemplaza guiones bajos por espacios.
     """
-    value = value.replace("nombre_app_", " ")
+    value = value.replace(f"{settings.APP_NAME}_", " ")
     value = value.replace("django_", " ")
     value = value.replace("auth_", " ")
     return value.replace("_", " ")

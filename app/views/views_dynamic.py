@@ -7,6 +7,7 @@ from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from auditlog.models import LogEntry
 import json
+from django.conf import settings
 from django.apps import apps
 from django.db import models
 from django.db.models import Q
@@ -59,14 +60,13 @@ def list_records(request, table_name):
     
     # Columnas sin 'password'
     columns = fields_to_include
-    print(records)
-    print(columns)
     context = {
         "records": records,
         "columns": columns,
         "table_name": table_name,
         "activeMenu": "bases_de_datos",
-        "activeItem": table_name
+        "activeItem": table_name,
+        "APP_NAME" : settings.APP_NAME
     }
     return render(request, "dynamic_table.html", context)
     
@@ -98,7 +98,7 @@ def create_record(request, table_name):
     if request.method == 'POST':
         form = DynamicModelForm(request.POST)
         if form.is_valid():
-            if (table_name == "nombre_app_prueba"):
+            if (table_name == f"{settings.APP_NAME}_prueba"):
                 new_record = form.save(commit=False)
                 if 'fecha_hoy' in [f.name for f in model._meta.fields]:
                     new_record.fecha_hoy = now()
@@ -150,8 +150,8 @@ def create_record(request, table_name):
 
     # Agregar opciones para campos FK
     foreign_options = {}
-    if table_name == "estructura_django_ordenes_prueba":
-        EmpleadoResponsableModel = get_model_by_name("nombre_app_usuario")
+    if table_name == f"{settings.APP_NAME}_ordenes_prueba":
+        EmpleadoResponsableModel = get_model_by_name(f"{settings.APP_NAME}_usuario")
         foreign_options["empleado_responsable"] = EmpleadoResponsableModel.objects.all()
 
     context = {
@@ -160,7 +160,8 @@ def create_record(request, table_name):
         "foreign_options": foreign_options,
         "form": form,
         "action": "Crear",
-        "table_name": table_name
+        "table_name": table_name,
+        "APP_NAME" : settings.APP_NAME
     }
 
     return render(request, "dynamic_form.html", context)
@@ -308,6 +309,7 @@ def formulario_record(request, table_name, id):
         "form": form,
         "table_name": table_name,
         "action": "Editar",
+        "APP_NAME" : settings.APP_NAME
     }
     return render(request, "dynamic_form.html", context)
     

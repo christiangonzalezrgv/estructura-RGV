@@ -75,7 +75,7 @@
                         </div>
                     </a>
                     <ul x-cloak x-show="activeMenu === 'auditoria'" x-collapse class="sub-menu flex flex-col gap-1">
-                        <li><a :class="{'active': activeItem === 'prueba'}" href="/db/nombre_app_auditlog_logentry">Logs</a></li>
+                        <li><a :class="{'active': activeItem === 'logs'}" href="/db/{{ APP_NAME|add:'_auditlog_logentry' }}">Logs</a></li>
                     </ul>
                 </li>
                 <li class="menu nav-item">

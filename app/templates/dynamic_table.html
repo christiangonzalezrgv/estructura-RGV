@@ -89,8 +89,8 @@
                                 </th>
                                 {% endfor %}
 
-                                {% if table_name == "nombre_app_prueba" %}
-                                <th>archivos</th>
+                                {% if table_name == APP_NAME|add:"_prueba" %}
+                                <th>Archivos</th>
                                 {% endif %}
                             </tr>
                         </thead>
@@ -106,7 +106,7 @@
                                             <span x-text="record[col] ? record[col] : '-'"></span>
                                         </td>
                                     </template>
-                                    {% if table_name == "nombre_app_prueba" %}
+                                    {% if table_name == APP_NAME|add:"_prueba" %}
                                     <td>
                                         <a :href="`/archivos/${record.id}`"
                                             class="border w-10 h-10 flex items-center justify-center text-primary border-transparent rounded-md transition-all duration-300 hover:text-white hover:bg-primary bg-primary/10">
